@@ -6,6 +6,9 @@
 #include <list>
 #include <cstring>
 
+/*
+ * Uses an array of linked lists which contain key value pairs.
+ */
 class HashTable {
     private:
         // const number of lists
@@ -18,17 +21,17 @@ class HashTable {
         void insertItem(int key, std::string value); // insert key-val pair
         void removeItem(int key);
         void printTable();
+        std::string getValue(int key);
 
 };
 
 // will return true if every list in table has size 0
 bool HashTable::isEmpty() {
-    int sum = 0;
     for(int i = 0; i < hashGroups; i++) {
-        sum += table[i].size();
+        if (table[i].size()) return false;
     }
 
-    return (!sum); 
+    return true;
 }
 
 // returns index of given key
@@ -60,6 +63,7 @@ void HashTable::insertItem(int key, std::string value) {
     return;
 }
 
+// removes a given key-value pair from table
 void HashTable::removeItem(int key) {
     int hashValue = hashFunction(key);
 
@@ -79,26 +83,72 @@ void HashTable::removeItem(int key) {
     return;
 }
 
+// iterates through table, printing each key-value pair
 void HashTable::printTable() {
     for (int i = 0; i < hashGroups; i++) {
         if (table[i].size() == 0) continue;
 
         auto bgn = table[i].begin();
-        for(; bgn != table[i].end(); i++) {
-            std::cout << "Key :" << bgn->first << " Value: " << bgn->second << '\n';
+        for(; bgn != table[i].end(); bgn++) {
+            std::cout << "Key : " << bgn->first << " Value: " << bgn->second << '\n';
         }
     }
 
     return;
 }
 
-// stesting
-int main(void) {
-    HashTable HT;
+// returns "null" if key not found, otherwise returns value
+std::string HashTable::getValue(int key) {
 
-    if (HT.isEmpty()) {
+    for(int i = 0; i < hashGroups; i++) {
+        if (table[i].size() == 0) continue;
+        auto bgn = table[i].begin();
+
+        for(; bgn != table[i].end(); bgn++) {
+            if (bgn->first == key) return bgn->second;
+        }
+    }
+
+    std::cout << "ERR: Key does not in table!\n";
+    return "null";
+}
+
+// testing
+int main(void) {
+    HashTable myHash;
+
+    myHash.insertItem(203,"ben2");
+    myHash.insertItem(204, "hello");
+    myHash.insertItem(324, "benef");
+
+    if (myHash.isEmpty()) {
         std::cout << "empty!" << std::endl;
     }
 
+    myHash.printTable();
+    myHash.removeItem(203);
+
+    myHash.insertItem(2,"fsdfd");
+    myHash.insertItem(2432,"fsdfd");
+    myHash.insertItem(243,"fsdfd");
+    myHash.insertItem(2432,"fsdfd");
+    myHash.insertItem(24321,"fsdfd");
+    myHash.insertItem(4322,"fsdfd");
+
+    myHash.printTable();
+    std::cout << myHash.getValue(204) << std::endl;
+
+    myHash.removeItem(204);
+    myHash.removeItem(2);
+    myHash.removeItem(2432);
+    myHash.removeItem(243);
+    myHash.removeItem(24321);
+    myHash.removeItem(4322);
+    myHash.removeItem(324);
+
+    myHash.printTable();
+    if (myHash.isEmpty()) {
+        std::cout << "empty!" << std::endl;
+    }
     return 0;
 }
