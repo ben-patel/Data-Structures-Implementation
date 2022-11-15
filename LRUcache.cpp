@@ -1,6 +1,5 @@
 #include <iostream>
 #include <unordered_map>
-using namespace std;
 
 /* 
    Holds key value pairs
@@ -62,7 +61,7 @@ private:
     int Capacity;
     Node *left;
     Node *right;
-    unordered_map<int, Node*> cache;
+    std::unordered_map<int, Node*> cache;
 
     void remove(Node *ptr) {
         Node *prev = ptr->prev;
@@ -92,7 +91,7 @@ int main(void) {
     c.put(5,6);
     c.put(4,3);
     c.put(3,9);
-    cout << c.get(3);
+    std::cout << c.get(3);
      
     return 0;
 }
